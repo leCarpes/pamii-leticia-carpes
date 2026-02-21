@@ -52,8 +52,6 @@ export default function Index() {
           </View>
         </View>
 
-
-
         <View 
         style={{
         marginTop: 50,
