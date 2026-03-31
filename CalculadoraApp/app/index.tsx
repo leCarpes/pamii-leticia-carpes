@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; // UseState controla os estados das variávies, renderizamento na tela
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
 
 interface BotaoProps {
-  titulo: string;
-  corFundo?: string;
-  corTexto?: string;
+  titulo: string; // : obrigatório
+  corFundo?: string; // ? opcional
+  corTexto?: string; // ? opcional
 }
 
 export default function Index() {
@@ -40,7 +40,7 @@ export default function Index() {
     } else if (valor === '=') {
       try {
         const expressaoFormatada = expressao.replace(/x/g, '*').replace(/÷/g, '/');
-        const resultadoCalculado = eval(expressaoFormatada);
+        const resultadoCalculado = eval(expressaoFormatada); // Eval faz a conta (string para número)
 
         setResultado(String(resultadoCalculado));
         setExpressao(String(resultadoCalculado));
