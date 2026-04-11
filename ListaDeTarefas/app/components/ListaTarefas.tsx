@@ -1,82 +1,103 @@
+// Importa o React para criar componentes
 import React from 'react';
+
+// Importa componentes do React Native:
+// View = contêiner para organizar elementos
+// Text = exibe texto na tela
+// StyleSheet = cria estilos organizados
 import { View, Text, StyleSheet } from 'react-native';
+
+// Importa o componente BotaoAcao criado anteriormente
 import BotaoAcao from './BotaoAcao';
 
-// Tipo da tarefa
+// Define o tipo de cada tarefa
 interface Tarefa {
-  id: number;
-  texto: string;
+  id: number;   // identificador único da tarefa
+  texto: string; // descrição da tarefa
 }
 
-// Props da tabela
+// Define as propriedades que o componente ListaTarefas pode receber
 interface ListaTarefasProps {
-  tarefas: Tarefa[];
-  aoExcluir: (id: number) => void;
+  tarefas: Tarefa[]; // lista completa de tarefas
+  aoExcluir: (id: number) => void; // função chamada para excluir uma tarefa
 }
 
-// Componente que representa uma TABELA
+// Componente funcional que representa uma "tabela" de tarefas
+// Usa View + flexDirection para simular linhas e colunas
 const ListaTarefas: React.FC<ListaTarefasProps> = ({
-  tarefas,
-  aoExcluir
+  tarefas,   // lista de tarefas recebida como prop
+  aoExcluir  // função para excluir tarefa
 }) => (
+
+  // Contêiner principal da tabela
   <View style={styles.container}>
 
-    {/* CABEÇALHO DA TABELA */}
+    {/* Cabeçalho da tabela */}
     <View style={styles.linha}>
       <Text style={styles.colunaHeader}>Tarefa</Text>
       <Text style={styles.colunaHeader}>Ação</Text>
     </View>
 
-    {/* LINHAS DA TABELA */}
+    {/* Renderiza cada tarefa como uma linha */}
     {tarefas.map((item) => (
-      <View key={item.id} style={styles.linha}>
-        <Text style={styles.coluna}>{item.texto}</Text>
 
+      // Cada item da lista vira uma linha
+      <View key={item.id} style={styles.linha}>
+
+        {/* Primeira coluna: texto da tarefa */}
+        <Text style={styles.coluna}>
+          {item.texto}
+        </Text>
+
+        {/* Segunda coluna: botão de ação */}
         <View style={styles.coluna}>
           <BotaoAcao
-            titulo="Excluir"
-            corFundo="#ff3b30"
-            onPress={() => aoExcluir(item.id)}
+            titulo="Excluir"       // texto do botão
+            corFundo="#850b05"     // cor de fundo vermelha
+            onPress={() => aoExcluir(item.id)} // ao clicar, chama função passando o id
           />
         </View>
+
       </View>
     ))}
 
   </View>
 );
 
+// Exporta o componente para ser usado em outros arquivos
 export default ListaTarefas;
 
-// Estilos da tabela
+// Definição dos estilos usando StyleSheet
 const styles = StyleSheet.create({
+
+  // Estilo do contêiner principal
   container: {
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    overflow: 'hidden',
+    marginTop: 10,       // espaço acima da tabela
+    borderWidth: 1,      // espessura da borda externa
+    borderColor: '#ccc', // cor da borda externa
+    borderRadius: 10,    // bordas arredondadas
+    overflow: 'hidden',  // evita que conteúdo ultrapasse borda
   },
 
-  // Cada linha da tabela
+  // Estilo de cada linha (simula <tr>)
   linha: {
-    flexDirection: 'row', // cria colunas
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: '#eee',
+    flexDirection: 'row',   // organiza elementos em linha
+    padding: 10,            // espaçamento interno
+    borderBottomWidth: 1,   // linha divisória inferior
+    borderColor: '#eee',    // cor da linha divisória
   },
 
-  // Cabeçalho
+  // Estilo do cabeçalho (simula <th>)
   colunaHeader: {
-    flex: 1, // divide espaço igualmente
-    textAlign: 'center',
-    fontWeight: 'bold',
+    flex: 1,                // ocupa espaço proporcional
+    textAlign: 'center',    // centraliza texto
+    fontWeight: 'bold',     // deixa em negrito
   },
 
-  // Conteúdo
+  // Estilo das colunas (simula <td>)
   coluna: {
-    flex: 1, // mantém alinhamento perfeito
-    textAlign: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1,                // ocupa espaço proporcional
+    justifyContent: 'center', // centraliza verticalmente
+    alignItems: 'center',     // centraliza horizontalmente
   },
 });

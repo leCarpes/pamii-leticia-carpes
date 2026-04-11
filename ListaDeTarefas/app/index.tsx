@@ -1,88 +1,124 @@
+// Importa o React e o hook useState para gerenciar estados
 import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
 
+// Importa o Stack do expo-router para configurar cabeçalho da tela
+import { Stack } from 'expo-router';
+
+// Importa componentes básicos do React Native
+// View = contêiner
+// StyleSheet = estilos
+// ScrollView = permite rolagem da tela
+import { View, StyleSheet, ScrollView } from 'react-native';
+
+// Importação dos componentes criados anteriormente
 import CampoTexto from './components/CampoTexto';
 import BotaoAcao from './components/BotaoAcao';
 import ListaTarefas from './components/ListaTarefas';
 import ModalConfirmacao from './components/ModalConfirmacao';
 
-// Tipo de tarefa
+// Define o tipo de uma tarefa
 interface Tarefa {
-  id: number;
-  texto: string;
+  id: number;   // identificador único
+  texto: string; // descrição da tarefa
 }
 
+// Componente principal da tela
 export default function Index() {
 
-  // Estado do input
+  // Estado que guarda o texto digitado no input
   const [texto, setTexto] = useState('');
 
-  // Lista de tarefas
+  // Estado que guarda todas as tarefas adicionadas
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
 
-  // Controle do modal
+  // Estado que controla se o modal está visível
   const [modalVisivel, setModalVisivel] = useState(false);
 
-  // Guarda o ID que será excluído
+  // Estado que guarda o ID da tarefa selecionada para exclusão
   const [idSelecionado, setIdSelecionado] = useState<number | null>(null);
 
-  // Adiciona tarefa
+  // Função para adicionar nova tarefa
   const adicionarTarefa = () => {
+
+    // Não adiciona se o campo estiver vazio
     if (!texto) return;
 
+    // Cria nova tarefa com ID único baseado no tempo
     const novaTarefa = {
       id: Date.now(),
       texto,
     };
 
+    // Atualiza lista adicionando a nova tarefa
     setTarefas([...tarefas, novaTarefa]);
+
+    // Limpa o campo de texto
     setTexto('');
   };
 
-  // Abre modal
+  // Função chamada ao clicar em excluir (abre modal)
   const solicitarExclusao = (id: number) => {
-    setIdSelecionado(id);
-    setModalVisivel(true);
+    setIdSelecionado(id);   // guarda ID da tarefa
+    setModalVisivel(true);  // abre modal
   };
 
-  // Confirma exclusão
+  // Função chamada ao confirmar exclusão
   const confirmarExclusao = () => {
+
+    // Remove tarefa filtrando pelo ID
     setTarefas(tarefas.filter(t => t.id !== idSelecionado));
+
+    // Fecha modal
     setModalVisivel(false);
   };
 
+  // Renderização da tela
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView style={styles.container}>
 
-      {/* INPUT */}
+      {/* Cabeçalho da tela */}
+      <Stack.Screen options={{ 
+        title: 'Lista de Tarefas',          // título exibido
+        headerTitleAlign: 'center',         // centraliza título
+        headerStyle: { height: 60 },        // altura do cabeçalho
+        headerTitleStyle: { marginTop: 10 } // margem superior do título
+      }} />
+
+      {/* Campo de texto para digitar tarefa */}
       <CampoTexto
-        valor={texto}
-        onChange={setTexto}
-        placeholder="Digite uma tarefa..."
+        valor={texto}                       // valor atual do input
+        onChange={setTexto}                 // atualiza estado ao digitar
+        placeholder="Digite uma tarefa..."  // texto de dica
       />
 
-      {/* BOTÃO ADICIONAR */}
-      <BotaoAcao titulo="Adicionar" onPress={adicionarTarefa} />
+      {/* Botão para adicionar tarefa */}
+      <BotaoAcao
+        titulo="Adicionar"                  // texto do botão
+        onPress={adicionarTarefa}           // função chamada ao clicar
+      />
 
-      {/* TABELA */}
-      <ListaTarefas tarefas={tarefas} aoExcluir={solicitarExclusao} />
+      {/* Lista de tarefas exibida em formato de tabela */}
+      <ListaTarefas
+        tarefas={tarefas}                   // lista completa
+        aoExcluir={solicitarExclusao}       // função chamada ao excluir
+      />
 
-      {/* MODAL */}
+      {/* Modal de confirmação de exclusão */}
       <ModalConfirmacao
-        visivel={modalVisivel}
-        aoCancelar={() => setModalVisivel(false)}
-        aoConfirmar={confirmarExclusao}
+        visivel={modalVisivel}              // controla visibilidade
+        aoCancelar={() => setModalVisivel(false)} // fecha modal sem excluir
+        aoConfirmar={confirmarExclusao}     // confirma exclusão
       />
 
-    </SafeAreaView>
+    </ScrollView>
   );
 }
 
-// Estilos gerais
+// Estilos da tela principal
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#f2f2f2',
+    flex: 1,              // ocupa toda a tela
+    padding: 20,          // espaçamento interno
+    backgroundColor: '#f2f2f2', // cor de fundo cinza claro
   },
 });
